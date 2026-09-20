@@ -1,0 +1,32 @@
+services:
+    postgres:
+        image: postgres:15-alpine
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+        volumes:
+            - dendrite-postgres-data:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    dendrite:
+        image: ghcr.io/element-hq/dendrite-monolith:latest
+        restart: unless-stopped
+        depends_on:
+            postgres:
+                condition: service_healthy
+        ports:
+            - '${DENDRITE_PORT}:8008'
+        volumes:
+            - ./dendrite/config:/etc/dendrite
+        command: ['-config', '/etc/dendrite/dendrite.yaml']
+
+volumes:
+    dendrite-postgres-data:
+env_file:
+    - .env
