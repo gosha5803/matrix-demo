@@ -25,8 +25,9 @@ services:
         volumes:
             - ./dendrite/config:/etc/dendrite
         command: ['-config', '/etc/dendrite/dendrite.yaml']
+        # 👇 ВАЖНО: env_file должен быть ВНУТРИ блока dendrite (с таким же отступом, как image или ports)
+        env_file:
+            - .env
 
 volumes:
     dendrite-postgres-data:
-env_file:
-    - .env
