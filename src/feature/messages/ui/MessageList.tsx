@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Room } from 'matrix-js-sdk'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { MessageCard } from './Messagecard'
+import { MessageCard } from './MessageCard'
 import { useRoomMessages } from '../hooks/useRoomMessages'
 
 type MessageListProps = {
